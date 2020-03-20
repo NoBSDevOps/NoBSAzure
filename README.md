@@ -1,2 +1,3 @@
-# The-No-BS-Way-to-DevOps-in-Azure-Project-Codebase
-This repository will contain all code and needed READMEs 
+# _From Admin to DevOps: The No-BS Way to DevOps in Azure_ Book Resources
+
+The repo containing all example code snippets and related files.
