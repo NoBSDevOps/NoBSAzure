@@ -1,0 +1,16 @@
+# FROM - The image that will be used in the dockerfile. The image is pulled from 
+# Docker Hub in Microsoft's registry for .NET core which is mcr.microsoft.com/dotnet/core.
+FROM mcr.microsoft.com/dotnet/core/sdk AS build-env
+
+# WORKDIR - The working directory of where the application resides.
+WORKDIR /appdir
+
+# EXPOSE - Exposing means the code is opening up the port to allow inbound
+# connectivity (very much like a firewall rule). As soon as the container is
+# created from the Dockerfile, the ports (in this case 80 and 443) are automatically open.
+EXPOSE 80
+EXPOSE 443
+
+# ENTRYPOINT - This configures a container to run as an executable. In this case,
+# the created container will run via the don't executable using web.dll as an argument
+ENTRYPOINT ["dotnet", "web.dll"]
