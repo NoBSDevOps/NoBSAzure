@@ -71,13 +71,23 @@ $availabilitySetName = "$projectName-VmAvailSet"
 az vm availability-set create --name $availabilitySetName
 #endregion
 
+#region Create the custom script JSON file to install IIS
+## When run via the custom script extension, this command will download the Install-IIS.ps1 script located in the
+## book's GitHub resources repo and run it installing the IIS Windows feature.
+$obj = [pscustomobject]@{
+    "fileUris"         = @("https://raw.githubusercontent.com/NoBSDevOps/BookResources/master/Part%20I%3A%20Tools/Azure%20Load%20Balancers/Install-IIS.ps1")
+    "commandToExecute" = "./Install-IIS.ps1"
+}
+$obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
+#endregion
+
 #region Create the VMs to place into the availability set
 
 0..2 | ForEach-Object {
     $vmName = "$projectName-$_"
     $nicName = "$vmName-Nic"
     
-    ## Create the VM's NIC
+    # Create the VM's NIC
     az network nic create `
         --name $nicName `
         --vnet-name $vNetName --subnet $subNetName `
@@ -98,18 +108,12 @@ az vm availability-set create --name $availabilitySetName
     az vm extension set `
         --vm-name $vmName --name customScript `
         --publisher Microsoft.Azure.Extensions `
-        --protected-settings ./script-config.json
+        --settings './iis_custom_script_settings.json'
 }
 #endregion
 
-#region Monitor the VM creation
-while (az deployment group list --query "[?properties.provisioningState=='Running'].name" | ConvertFrom-Json) {
-    Write-Host 'Still waiting on all resource deployments to finish...'
-    Start-Sleep -Seconds 5
-}
-
-#endregion
-
+#region Ensure all deployments are completed
+az deployment group list --query "[?properties.provisioningState=='Running'].name"
 #endregion
 
 #region Cleaning up

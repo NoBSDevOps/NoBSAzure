@@ -1,4 +1,4 @@
 {
-    "fileUris": ["https://raw.githubusercontent.com/Microsoft/dotnet-core-sample-templates/master/dotnet-core-music-linux/scripts/config-music.sh"],
+    "fileUris": ["https://raw.githubusercontent.com/NoBSDevOps/BookResources/master/Part%20I%3A%20Tools/Azure%20Load%20Balancers/Install-IIS.ps1"],
     "commandToExecute": "./Install-IIS.ps1"
 }
