@@ -1,0 +1,4 @@
+{
+    "fileUris": ["https://raw.githubusercontent.com/Microsoft/dotnet-core-sample-templates/master/dotnet-core-music-linux/scripts/config-music.sh"],
+    "commandToExecute": "./Install-IIS.ps1"
+}
