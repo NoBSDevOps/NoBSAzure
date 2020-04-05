@@ -76,7 +76,7 @@ az vm availability-set create --name $availabilitySetName
 ## book's GitHub resources repo and run it installing the IIS Windows feature.
 $obj = [pscustomobject]@{
     "fileUris"         = @("https://raw.githubusercontent.com/NoBSDevOps/BookResources/master/Part%20I%3A%20Tools/Azure%20Load%20Balancers/Install-IIS.ps1")
-    "commandToExecute" = "powershell.exe Install-IIS.ps1"
+    "commandToExecute" = "./Install-IIS.ps1"
 }
 $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
 #endregion
@@ -87,26 +87,26 @@ $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
     $vmName = "$projectName-$_"
     $nicName = "$vmName-Nic"
     
-    # Create the VM's NIC
-    az network nic create `
-        --name $nicName `
-        --vnet-name $vNetName --subnet $subNetName `
-        --network-security-group $nsgName --lb-name $lbName `
-        --lb-address-pools $lbAddrPool
+    # # Create the VM's NIC
+    # az network nic create `
+    #     --name $nicName `
+    #     --vnet-name $vNetName --subnet $subNetName `
+    #     --network-security-group $nsgName --lb-name $lbName `
+    #     --lb-address-pools $lbAddrPool
 
-    ## Create the VM
-    az vm create `
-        --name $vmName `
-        --availability-set $availabilitySetName `
-        --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest `
-        --nics $nicName `
-        --size 'Standard_DS1_v2' `
-        --admin-password 'I like azure.' `
-        --admin-username 'NoBS'
+    # ## Create the VM
+    # az vm create `
+    #     --name $vmName `
+    #     --availability-set $availabilitySetName `
+    #     --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest `
+    #     --nics $nicName `
+    #     --size 'Standard_DS1_v2' `
+    #     --admin-password 'I like azure.' `
+    #     --admin-username 'NoBS'
 
     ## Install the custom script extension on the VMs and install IIS
     az vm extension set `
-        --vm-name $vmName --name customScript `
+        --vm-name $vmName --name CustomScriptExtension `
         --publisher Microsoft.Compute `
         --settings './iis_custom_script_settings.json'
 }
