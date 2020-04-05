@@ -76,7 +76,7 @@ az vm availability-set create --name $availabilitySetName
 ## book's GitHub resources repo and run it installing the IIS Windows feature.
 $obj = [pscustomobject]@{
     "fileUris"         = @("https://raw.githubusercontent.com/NoBSDevOps/BookResources/master/Part%20I%3A%20Tools/Azure%20Load%20Balancers/Install-IIS.ps1")
-    "commandToExecute" = "./Install-IIS.ps1"
+    "commandToExecute" = "powershell.exe Install-IIS.ps1"
 }
 $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
 #endregion
@@ -107,7 +107,7 @@ $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
     ## Install the custom script extension on the VMs and install IIS
     az vm extension set `
         --vm-name $vmName --name customScript `
-        --publisher Microsoft.Azure.Extensions `
+        --publisher Microsoft.Compute `
         --settings './iis_custom_script_settings.json'
 }
 #endregion
