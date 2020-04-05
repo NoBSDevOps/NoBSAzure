@@ -105,6 +105,8 @@ $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
     #     --admin-username 'NoBS'
 
     ## Install the custom script extension on the VMs and install IIS
+    ## Use CustomScriptExtension for Windows and customScript for Linux
+    ## Microsoft.Compute for CustomScriptExtension and Microsoft.Azure.Extension for customScript
     az vm extension set `
         --vm-name $vmName --name CustomScriptExtension `
         --publisher Microsoft.Compute `
@@ -114,6 +116,15 @@ $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
 
 #region Ensure all deployments are completed
 az deployment group list --query "[?properties.provisioningState=='Running'].name"
+#endregion
+
+#region Test that you can access the default IIS page
+
+## Find the load balancer's public IP
+(az network public-ip list | ConvertFrom-Json).ipAddress
+
+## Open up a browser and you should get the IIS page. Take down a VM and another will pick it up.
+
 #endregion
 
 #region Cleaning up
