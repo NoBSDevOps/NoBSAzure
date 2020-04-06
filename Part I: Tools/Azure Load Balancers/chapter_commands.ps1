@@ -87,22 +87,22 @@ $obj | ConvertTo-Json | Set-Content './iis_custom_script_settings.json'
     $vmName = "$projectName-$_"
     $nicName = "$vmName-Nic"
     
-    # # Create the VM's NIC
-    # az network nic create `
-    #     --name $nicName `
-    #     --vnet-name $vNetName --subnet $subNetName `
-    #     --network-security-group $nsgName --lb-name $lbName `
-    #     --lb-address-pools $lbAddrPool
+    # Create the VM's NIC
+    az network nic create `
+        --name $nicName `
+        --vnet-name $vNetName --subnet $subNetName `
+        --network-security-group $nsgName --lb-name $lbName `
+        --lb-address-pools $lbAddrPool
 
-    # ## Create the VM
-    # az vm create `
-    #     --name $vmName `
-    #     --availability-set $availabilitySetName `
-    #     --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest `
-    #     --nics $nicName `
-    #     --size 'Standard_DS1_v2' `
-    #     --admin-password 'I like azure.' `
-    #     --admin-username 'NoBS'
+    ## Create the VM
+    az vm create `
+        --name $vmName `
+        --availability-set $availabilitySetName `
+        --image MicrosoftWindowsServer:WindowsServer:2019-Datacenter:latest `
+        --nics $nicName `
+        --size 'Standard_DS1_v2' `
+        --admin-password 'I like azure.' `
+        --admin-username 'NoBS'
 
     ## Install the custom script extension on the VMs and install IIS
     ## Use CustomScriptExtension for Windows and customScript for Linux
