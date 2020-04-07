@@ -14,7 +14,7 @@ az group create --name $resourceGroupName --location $location
 $pipName = "$projectName-pip"
 
 ## Must capture this to provide to the Load balancer frontend IP configuration later
-$pubIp = az network public-ip create --name $pipName --allocation-method Static | ConvertFrom-Json
+az network public-ip create --name $pipName --allocation-method Static
 #endregion
 
 #region Create the vNet and subnet
