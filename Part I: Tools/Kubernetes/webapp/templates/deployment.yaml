@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-application
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: nginx
+        image: "{{ .Values.image.repository }}"
+        ports:
+        - containerPort: {{ .Values.service.port }}
