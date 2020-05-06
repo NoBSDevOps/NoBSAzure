@@ -1,3 +1,4 @@
-Part I: Tools/.DS_Store
-Part I: Tools/Azure VM Availability Sets/terraform/.terraform/plugins/darwin_amd64/lock.json
-Part I: Tools/Azure VM Availability Sets/terraform/.terraform/plugins/darwin_amd64/terraform-provider-azurerm_v2.5.0_x5
+.DS_Store
+lock.json
+terraform-provider*
+terraform.tfstate*
