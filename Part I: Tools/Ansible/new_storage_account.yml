@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+	connection: local
+	tasks:
+	- name: No-BS-Storage
+		azure_rm_storageaccount:
+			resource_group: Dev10
+			name: nobsdevops
+			type: Standard_GRS
