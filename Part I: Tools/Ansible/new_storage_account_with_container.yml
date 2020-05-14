@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+	connection: local
+	tasks:
+	- name: No-BS-Storage
+		azure_rm_storageaccount:
+			resource_group: Dev10
+			name: nobsdevops
+			type: Standard_GRS
+	- name: Create container foo and upload a file
+		azure_rm_storageblob:
+			resource_group: Dev10
+			storage_account_name: nobsdevops
+			container: foo
+			blob: nobs.png
+			src: ./files/nobs.png
+			public_access: container
+			content_type: 'application/image'

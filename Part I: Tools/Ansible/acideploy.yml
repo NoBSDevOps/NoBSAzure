@@ -1,0 +1,28 @@
+---
+- hosts: localhost ## Run on the Ansible server itself
+  connection: local ## Run on the Ansible server itself
+	
+	## It's best to put resources that can change, like the resource group or the
+	## container image for example, as variables. That way if the playbook ever
+	## needs to be used in another environment, it'll be a little bit easier to
+	## swap out variables vs looking through an entire playbook for hard-coded values.
+  vars:
+    resourceGroup: NoBSDevOps
+    name: nginxwebapp
+    containerName: nginxwebapp
+    image: nginx:latest
+
+  tasks:
+	## Reference the resource group and container group variables, along with the
+	## container name and image variables to create an Nginx container to use ports
+	## 80 and 443 as a web server.
+  - name: Create an Azure Container Instance
+    azure_rm_containerinstance:
+      resource_group: "{{ resourceGroup }}"
+      name: "{{ name }}"
+      containers:
+        - name: "{{ containerName }}"
+          image: "{{ image }}"
+          ports:
+            - 80
+            - 443

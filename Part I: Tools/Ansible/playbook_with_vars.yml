@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars:
+    resourceGroup: Dev10
+    name: nobsstorage
+    
+ tasks:
+  - name: No-BS-Storage
+    azure_rm_storageaccount:
+      resource_group: "{{ resourceGroup }}"
+      name: "{{ name }}"
+      type: Standard_GRS
