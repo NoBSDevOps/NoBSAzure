@@ -1,0 +1,2 @@
+resourceGroupName = "NoBSDevOps"
+location = "eastus"
