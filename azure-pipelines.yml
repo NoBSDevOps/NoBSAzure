@@ -15,7 +15,7 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: "BookResources/Part I: Tools/Azure Pipelines/VM"
-    commandOptions: '-var ''subscriptionID=$(subscriptionID)'' -var ''network_interface_id=$(network_interface_id)'''''
+    commandOptions: '-var="subscriptionID=$(subscriptionID)" -var="network_interface_id=$(network_interface_id)"'
     backendServiceArm: 'Mike-Pay-As-You-Go(220284d2-6a19-4781-87f8-5c564ec4fec9)'
     backendAzureRmResourceGroupName: 'NoBSDevOps'
     backendAzureRmStorageAccountName: 'nobsstorage'
@@ -26,5 +26,5 @@ steps:
     provider: 'azurerm'
     command: 'apply'
     workingDirectory: 'BookResources/Part I: Tools/Azure Pipelines/VM'
-    commandOptions: '-var ''''subscriptionID=$(subscriptionID)'''' -var ''''network_interface_id=$(network_interface_id)'
+    commandOptions: '-var="subscriptionID=$(subscriptionID)" -var="network_interface_id=$(network_interface_id)"'
     environmentServiceNameAzureRM: 'Mike-Pay-As-You-Go(220284d2-6a19-4781-87f8-5c564ec4fec9)'
