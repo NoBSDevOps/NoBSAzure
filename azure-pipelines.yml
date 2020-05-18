@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: "BookResources/Part I: Tools/Azure Pipelines/VM"
+    commandOptions: '-var ''subscriptionID=$(subscriptionID)'' -var ''network_interface_id=$(network_interface_id)'''''
+    backendServiceArm: 'Mike-Pay-As-You-Go(220284d2-6a19-4781-87f8-5c564ec4fec9)'
+    backendAzureRmResourceGroupName: 'NoBSDevOps'
+    backendAzureRmStorageAccountName: 'nobsstorage'
+    backendAzureRmContainerName: 'nobscontainer'
+    backendAzureRmKey: 'tf/terraform.tfstate'
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: 'BookResources/Part I: Tools/Azure Pipelines/VM'
+    commandOptions: '-var ''''subscriptionID=$(subscriptionID)'''' -var ''''network_interface_id=$(network_interface_id)'
+    environmentServiceNameAzureRM: 'Mike-Pay-As-You-Go(220284d2-6a19-4781-87f8-5c564ec4fec9)'
