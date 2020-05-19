@@ -27,14 +27,11 @@ resource "azurerm_virtual_machine" "NoBSDevVM" {
   os_profile {
     computer_name  = "nobsdev01"
     admin_username = "azureuser"
+    admin_password = "W3lcomeWorld12%)"
   }
 
   os_profile_linux_config {
-    disable_password_authentication = true
-    ssh_keys {
-      path     = "/home/azureuser/.ssh/authorized_keys"
-      key_data = file("~/.ssh/azure.pub")
-    }
+    disable_password_authentication = false
   }
   tags = {
     environment = "staging"
