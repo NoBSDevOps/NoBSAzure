@@ -1,0 +1,9 @@
+[azurevms]
+52.188.147.109
+52.188.208.187
+
+[azurevms:vars]
+ansible_user=testadmin
+ansible_password=Password1234!
+ansible_connection=winrm
+#ansible_winrm_server_cert_validation=ignore

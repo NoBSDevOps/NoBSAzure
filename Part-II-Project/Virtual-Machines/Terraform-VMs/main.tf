@@ -8,11 +8,35 @@ resource "azurerm_resource_group" "monolithRG" {
     location = "East US"
 }
 
+resource "azurerm_network_security_group" "monolithnsg" {
+  name                = "allowssh"
+  location            = azurerm_resource_group.monolithRG.location
+  resource_group_name = azurerm_resource_group.monolithRG.name
+
+  security_rule {
+    name                       = "allowSSH"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
 resource "azurerm_virtual_network" "main" {
   name                = "monolith-network"
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.monolithRG.location
   resource_group_name = azurerm_resource_group.monolithRG.name
+
+    subnet {
+      name           = "subnet1"
+      address_prefix = "10.0.3.0/24"
+      security_group = azurerm_network_security_group.monolithnsg.id
+  }
 
       depends_on = [
         azurerm_resource_group.monolithRG
@@ -46,6 +70,13 @@ resource "azurerm_network_interface" "main" {
         azurerm_resource_group.monolithRG
   ]
 }
+
+resource "azurerm_network_interface_security_group_association" "nsg" {
+  count                     = 2
+  network_interface_id      = azurerm_network_interface.main[count.index].id
+  network_security_group_id = azurerm_network_security_group.monolithnsg.id
+}
+
 
 resource "azurerm_virtual_machine" "monolithVMs" {
     count = 2
@@ -82,6 +113,6 @@ storage_image_reference {
   }
 
         depends_on = [
-        azurerm_resource_group.monolithRG
+        azurerm_network_interface.main
   ]
 }

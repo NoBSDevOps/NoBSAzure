@@ -1,0 +1,10 @@
+---
+- hosts: azurevms
+  
+  tasks:
+  - name: Install IIS
+    win_feature:
+      name: 
+      - Web-Server
+      - Web-Common-Http
+      state: present
