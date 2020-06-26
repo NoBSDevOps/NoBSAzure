@@ -1,11 +1,11 @@
 provider "azurerm" {
-    version = "2.0.0"
-    features {}
+  version = "2.0.0"
+  features {}
 }
 
 resource "azurerm_resource_group" "monolithRG" {
-    name     = "monolithRG"
-    location = "East US"
+  name     = "monolithRG"
+  location = "East US"
 }
 
 resource "azurerm_network_security_group" "monolithnsg" {
@@ -32,14 +32,14 @@ resource "azurerm_virtual_network" "main" {
   location            = azurerm_resource_group.monolithRG.location
   resource_group_name = azurerm_resource_group.monolithRG.name
 
-    subnet {
-      name           = "subnet1"
-      address_prefix = "10.0.3.0/24"
-      security_group = azurerm_network_security_group.monolithnsg.id
+  subnet {
+    name           = "subnet1"
+    address_prefix = "10.0.3.0/24"
+    security_group = azurerm_network_security_group.monolithnsg.id
   }
 
-      depends_on = [
-        azurerm_resource_group.monolithRG
+  depends_on = [
+    azurerm_resource_group.monolithRG
   ]
 }
 
@@ -49,8 +49,8 @@ resource "azurerm_subnet" "internal" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefix       = "10.0.2.0/24"
 
-      depends_on = [
-        azurerm_resource_group.monolithRG
+  depends_on = [
+    azurerm_resource_group.monolithRG
   ]
 }
 
@@ -66,8 +66,8 @@ resource "azurerm_network_interface" "main" {
     private_ip_address_allocation = "Dynamic"
   }
 
-      depends_on = [
-        azurerm_resource_group.monolithRG
+  depends_on = [
+    azurerm_resource_group.monolithRG
   ]
 }
 
@@ -79,14 +79,14 @@ resource "azurerm_network_interface_security_group_association" "nsg" {
 
 
 resource "azurerm_virtual_machine" "monolithVMs" {
-    count = 2
-    name  = "monolithvm-${count.index}"
-    location = var.location
-    resource_group_name = azurerm_resource_group.monolithRG.name
-    vm_size               = "Standard_DS1_v2"
-    network_interface_ids = [azurerm_network_interface.main[count.index].id]
+  count                 = 2
+  name                  = "monolithvm-${count.index}"
+  location              = var.location
+  resource_group_name   = azurerm_resource_group.monolithRG.name
+  vm_size               = "Standard_DS1_v2"
+  network_interface_ids = [azurerm_network_interface.main[count.index].id]
 
-storage_image_reference {
+  storage_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
     sku       = "2019-Datacenter"
@@ -112,7 +112,7 @@ storage_image_reference {
     environment = "staging"
   }
 
-        depends_on = [
-        azurerm_network_interface.main
+  depends_on = [
+    azurerm_network_interface.main
   ]
 }
