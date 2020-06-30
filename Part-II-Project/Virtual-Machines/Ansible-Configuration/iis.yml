@@ -1,6 +1,6 @@
 ---
 - hosts: azurevms
-  
+  gather_facts: no
   tasks:
   - name: Install IIS
     win_feature:

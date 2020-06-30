@@ -20,7 +20,7 @@ resource "azurerm_network_security_group" "monolithnsg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "22"
+    destination_port_range     = "3389"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -54,6 +54,19 @@ resource "azurerm_subnet" "internal" {
   ]
 }
 
+resource "azurerm_public_ip" "monolithpublic" {
+  count                   = 2
+  name                    = "public-${count.index}"
+  location                = azurerm_resource_group.monolithRG.location
+  resource_group_name     = azurerm_resource_group.monolithRG.name
+  allocation_method       = "Dynamic"
+  idle_timeout_in_minutes = 30
+
+  tags = {
+    environment = "test"
+  }
+}
+
 resource "azurerm_network_interface" "main" {
   count               = 2
   name                = "monolith-nic-${count.index}"
@@ -64,10 +77,11 @@ resource "azurerm_network_interface" "main" {
     name                          = "testconfiguration1"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.monolithpublic[count.index].id
   }
 
   depends_on = [
-    azurerm_resource_group.monolithRG
+    azurerm_subnet.internal
   ]
 }
 

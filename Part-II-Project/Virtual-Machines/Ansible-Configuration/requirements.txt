@@ -1,0 +1,2 @@
+# Install the following using pip (Python package manager)
+pywinrm
