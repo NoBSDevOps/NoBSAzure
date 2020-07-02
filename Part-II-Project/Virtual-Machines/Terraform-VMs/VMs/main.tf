@@ -8,6 +8,12 @@ resource "azurerm_resource_group" "monolithRG" {
   location = "East US"
 }
 
+resource "azurerm_availability_set" "monolith-as" {
+  name                = "monolith-as"
+  location            = azurerm_resource_group.monolithRG.location
+  resource_group_name = azurerm_resource_group.monolithRG.name
+}
+
 resource "azurerm_network_security_group" "monolithnsg" {
   name                = "allowssh"
   location            = azurerm_resource_group.monolithRG.location
@@ -99,6 +105,7 @@ resource "azurerm_virtual_machine" "monolithVMs" {
   resource_group_name   = azurerm_resource_group.monolithRG.name
   vm_size               = "Standard_DS1_v2"
   network_interface_ids = [azurerm_network_interface.main[count.index].id]
+  availability_set_id   = azurerm_availability_set.monolith-as.id
 
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
