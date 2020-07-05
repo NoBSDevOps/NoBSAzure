@@ -4,7 +4,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "monolithRG" {
-  name     = "monolithRG"
+  name     = "NoBSDevOps-Monolith"
   location = "East US"
 }
 
