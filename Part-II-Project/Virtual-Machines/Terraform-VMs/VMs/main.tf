@@ -4,8 +4,8 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "monolithRG" {
-  name     = "monolithRG"
-  location = "East US"
+  name     = var.resource_group
+  location = var.location
 }
 
 resource "azurerm_availability_set" "monolith-as" {
