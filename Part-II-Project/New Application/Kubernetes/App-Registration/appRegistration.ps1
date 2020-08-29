@@ -3,7 +3,7 @@
 # 2. Takes the client ID and password, then stores them in Key Vault
 
 param(
-    [string]$name = "NoBS",
+    [string]$name = "nobsapp",
     [string]$rgName = "NoBS"
 )
 
