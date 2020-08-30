@@ -1,0 +1,30 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: 'Mike-Pay-As-You-Go(220284d2-6a19-4781-87f8-5c564ec4fec9)'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: 'az storage account create -n nobsstorageaccount -g NoBS -l eastus --sku Standard_LRS'
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: 'BookResources/Part-II-Project/New Application/Kubernetes/AKS-Build-Terraform/'
+    backendServiceArm: 'Mike-Pay-As-You-Go (220284d2-6a19-4781-87f8-5c564ec4fec9)'
+    backendAzureRmResourceGroupName: 'NoBS'
+    backendAzureRmStorageAccountName: 'nobsstorageaccount'
+    backendAzureRmContainerName: 'tfstate'
+    backendAzureRmKey: 'tf/terraform.tfstate'
+
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: 'BookResources/Part-II-Project/New Application/Kubernetes/AKS-Build-Terraform/'
+    environmentServiceNameAzureRM: 'Mike-Pay-As-You-Go (220284d2-6a19-4781-87f8-5c564ec4fec9)'
