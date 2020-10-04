@@ -1,5 +1,8 @@
 provider "azurerm" {
   version = "2.0.0"
+  storage_account_name  = "nobsstorage"
+  container_name        = "tstate"
+  key                   = "terraform.tfstate"
   features {}
 }
 
