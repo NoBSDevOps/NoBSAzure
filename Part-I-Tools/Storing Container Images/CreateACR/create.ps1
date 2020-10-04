@@ -1,0 +1,1 @@
+az acr create -n nobsregistry -g NoBS --sku Standard
