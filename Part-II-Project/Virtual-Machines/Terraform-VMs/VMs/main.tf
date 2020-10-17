@@ -100,6 +100,22 @@ resource "azurerm_network_interface_security_group_association" "nsg" {
   network_security_group_id = azurerm_network_security_group.monolithnsg.id
 }
 
+resource "azurerm_lb" "LB" {
+ name                = "nobsloadbalancer"
+ location            = azurerm_resource_group.monolithRG.location
+ resource_group_name = azurerm_resource_group.monolithRG.name
+
+ frontend_ip_configuration {
+   name                 = "publicIPAddress"
+   public_ip_address_id = azurerm_public_ip.monolithpublic.id
+ }
+}
+
+resource "azurerm_lb_backend_address_pool" "test" {
+ resource_group_name = azurerm_resource_group.test.name
+ loadbalancer_id     = azurerm_lb.test.id
+ name                = "BackEndAddressPool"
+}
 
 resource "azurerm_virtual_machine" "monolithVMs" {
   count                 = 2
