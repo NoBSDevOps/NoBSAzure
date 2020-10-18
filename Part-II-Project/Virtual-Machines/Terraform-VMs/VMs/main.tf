@@ -121,8 +121,8 @@ resource "azurerm_lb" "LB" {
 }
 
 resource "azurerm_lb_backend_address_pool" "test" {
- resource_group_name = azurerm_resource_group.test.name
- loadbalancer_id     = azurerm_lb.test.id
+ resource_group_name = azurerm_resource_group.monolithRG.name
+ loadbalancer_id     = azurerm_lb.LB.id
  name                = "BackEndAddressPool"
 }
 
