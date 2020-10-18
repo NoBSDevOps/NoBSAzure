@@ -37,16 +37,6 @@ resource "azurerm_virtual_network" "main" {
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.monolithRG.location
   resource_group_name = azurerm_resource_group.monolithRG.name
-
-  subnet {
-    name           = "subnet1"
-    address_prefix = "10.0.3.0/24"
-    security_group = azurerm_network_security_group.monolithnsg.id
-  }
-
-  depends_on = [
-    azurerm_resource_group.monolithRG
-  ]
 }
 
 resource "azurerm_subnet" "internal" {
