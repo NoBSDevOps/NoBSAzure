@@ -165,3 +165,7 @@ resource "azurerm_virtual_machine" "monolithVMs" {
     azurerm_network_interface.main
   ]
 }
+
+output "VMIps" {
+  value       = azurerm_public_ip.vmIps.ip_address
+}
