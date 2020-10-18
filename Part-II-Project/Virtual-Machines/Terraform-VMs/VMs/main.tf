@@ -167,5 +167,5 @@ resource "azurerm_virtual_machine" "monolithVMs" {
 }
 
 output "VMIps" {
-  value       = ["${azurerm_public_ip.vmIps.*.ip_address}"]
+  value       = [${azurerm_public_ip.vmIps.*.ip_address}]
 }
