@@ -60,9 +60,21 @@ resource "azurerm_subnet" "internal" {
   ]
 }
 
-resource "azurerm_public_ip" "monolithpublic" {
+resource "azurerm_public_ip" "vmIps" {
   count                   = 2
-  name                    = "public-${count.index}"
+  name                    = "publicVmIp-${count.index}"
+  location                = azurerm_resource_group.monolithRG.location
+  resource_group_name     = azurerm_resource_group.monolithRG.name
+  allocation_method       = "Dynamic"
+  idle_timeout_in_minutes = 30
+
+  tags = {
+    environment = "test"
+  }
+}
+
+resource "azurerm_public_ip" "lbIp" {
+  name                    = "publicLbIp"
   location                = azurerm_resource_group.monolithRG.location
   resource_group_name     = azurerm_resource_group.monolithRG.name
   allocation_method       = "Dynamic"
@@ -83,7 +95,7 @@ resource "azurerm_network_interface" "main" {
     name                          = "testconfiguration1"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.monolithpublic[count.index].id
+    public_ip_address_id          = azurerm_public_ip.vmIps[count.index].id
   }
 
   depends_on = [
@@ -104,7 +116,7 @@ resource "azurerm_lb" "LB" {
 
  frontend_ip_configuration {
    name                 = "publicIPAddress"
-   public_ip_address_id = azurerm_public_ip.monolithpublic.id
+   public_ip_address_id = azurerm_public_ip.lbIp.id
  }
 }
 
