@@ -56,7 +56,7 @@ resource "azurerm_subnet" "internal" {
   address_prefix       = "10.0.2.0/24"
 
   depends_on = [
-    azurerm_resource_group.monolithRG
+    azurerm_virtual_network.main
   ]
 }
 
