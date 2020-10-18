@@ -38,7 +38,7 @@ resource "azurerm_network_security_group" "monolithnsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "5986"
-    source_address_prefix      = var.cloudShellSource
+    source_address_prefix      = var.cloud_shell_source
     destination_address_prefix = "*"
   }
 }
