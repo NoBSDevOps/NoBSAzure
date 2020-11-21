@@ -133,10 +133,17 @@ resource "azurerm_lb" "LB" {
  }
 }
 
-resource "azurerm_lb_backend_address_pool" "test" {
+resource "azurerm_lb_backend_address_pool" "be_pool" {
  resource_group_name = azurerm_resource_group.monolithRG.name
  loadbalancer_id     = azurerm_lb.LB.id
  name                = "BackEndAddressPool"
+}
+  
+resource "azurerm_network_interface_backend_address_pool_association" "be_assoc" {
+  count                   = 2
+  network_interface_id    = azurerm_network_interface.main.[count.index].id
+  ip_configuration_name   = "ip_config_${count.index}"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.be_pool.id
 }
 
 resource "azurerm_lb_probe" "lbprobe" {
