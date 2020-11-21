@@ -139,6 +139,13 @@ resource "azurerm_lb_backend_address_pool" "test" {
  name                = "BackEndAddressPool"
 }
 
+resource "azurerm_lb_probe" "lbprobe" {
+  resource_group_name = azurerm_resource_group.monolithRG.name
+  loadbalancer_id     = azurerm_lb.LB.id
+  name                = "http-running-probe"
+  port                = 80
+}
+
 resource "azurerm_windows_virtual_machine" "monolithVMs" {
   count                 = 2
   name                  = "monolithvm-${count.index}"
