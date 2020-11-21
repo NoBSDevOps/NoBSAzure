@@ -9,3 +9,7 @@ variable "resource_group" {
 variable "cloud_shell_source" {
     type = string
 }
+
+variable "domain_name_prefix" {
+    type = string
+}
