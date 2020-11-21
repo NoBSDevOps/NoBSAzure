@@ -7,6 +7,7 @@
       name: 
         - Web-Server
         - Web-Common-Http
+        - Web-Mgmt-Service
       include_management_tools: yes
       state: present
       
