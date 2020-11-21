@@ -127,35 +127,27 @@ resource "azurerm_lb_backend_address_pool" "test" {
  name                = "BackEndAddressPool"
 }
 
-resource "azurerm_virtual_machine" "monolithVMs" {
+resource "azurerm_windows_virtual_machine" "monolithVMs" {
   count                 = 2
   name                  = "monolithvm-${count.index}"
   location              = var.location
   resource_group_name   = azurerm_resource_group.monolithRG.name
-  vm_size               = "Standard_DS1_v2"
+  size                  = "Standard_DS1_v2"
   network_interface_ids = [azurerm_network_interface.main[count.index].id]
   availability_set_id   = azurerm_availability_set.monolith-as.id
-
-  storage_image_reference {
+  computer_name         = "hostname"
+  admin_username        = "testadmin"
+  admin_password        = "Password1234!"
+  
+  source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
     sku       = "2019-Datacenter"
     version   = "latest"
   }
-  storage_os_disk {
-    name              = "disk-${count.index}"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-  os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
-    admin_password = "Password1234!"
-  }
-
-  os_profile_windows_config {
-
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
   }
 
   tags = {
