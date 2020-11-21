@@ -105,7 +105,7 @@ resource "azurerm_network_interface" "main" {
   resource_group_name = azurerm_resource_group.monolithRG.name
 
   ip_configuration {
-    name                          = "testconfiguration1"
+    name                          = "ip_config"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.vmIps[count.index].id
@@ -142,7 +142,7 @@ resource "azurerm_lb_backend_address_pool" "be_pool" {
 resource "azurerm_network_interface_backend_address_pool_association" "be_assoc" {
   count                   = 2
   network_interface_id    = azurerm_network_interface.main[count.index].id
-  ip_configuration_name   = "ip_config_${count.index}"
+  ip_configuration_name   = "ip_config"
   backend_address_pool_id = azurerm_lb_backend_address_pool.be_pool.id
 }
 
