@@ -193,5 +193,5 @@ output "VM_IPs" {
 }
 
 output "Load_Balancer_IP" {
-  value       = azurerm_public_ip.lbIp.publicLbIp.ip_address
+  value       = azurerm_public_ip.lbIp.ip_address
 }
