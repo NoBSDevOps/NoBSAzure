@@ -10,13 +10,20 @@
       include_management_tools: yes
       state: present
       
+  - name: Enable IIS remote management
+    ansible.windows.win_regedit:
+      path: HKLM:\SOFTWARE\Microsoft\WebManagement\Server
+      name: EnableRemoteManagement
+      data: 1
+      type: dword
+      
   - name: Install WebDeploy
     ansible.windows.win_package:
       path: https://download.microsoft.com/download/0/1/D/01DC28EA-638C-4A22-A57B-4CEF97755C6C/WebDeploy_amd64_en-US.msi
       product_id: '{6773A61D-755B-4F74-95CC-97920E45E696}'
       arguments: ADDLOCAL=ALL
       state: present
-    
+ 
   - name: Start and set management service to auto
     win_service:
       name: WMSvc
