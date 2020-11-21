@@ -68,6 +68,7 @@ resource "azurerm_public_ip" "vmIps" {
   resource_group_name     = azurerm_resource_group.monolithRG.name
   allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 30
+  domain_name_label       = "${var.domain_name_prefix}-${count.index}"
 
   tags = {
     environment = "test"
