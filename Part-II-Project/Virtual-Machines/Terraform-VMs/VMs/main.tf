@@ -188,10 +188,10 @@ resource "azurerm_windows_virtual_machine" "monolithVMs" {
   ]
 }
 
-output "VM IPs" {
+output "VM_IPs" {
   value       = [azurerm_public_ip.vmIps.*.ip_address]
 }
 
-output "Load Balancer IP" {
+output "Load_Balancer_IP" {
   value       = azurerm_public_ip.lbIp.publicLbIp.ip_address
 }
