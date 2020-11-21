@@ -41,6 +41,17 @@ resource "azurerm_network_security_group" "monolithnsg" {
     source_address_prefix      = var.cloud_shell_source
     destination_address_prefix = "*"
   }
+  security_rule {
+    name                       = "allowWebDeploy"
+    priority                   = 102
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8172"
+    source_address_prefix      = var.management_ip
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_virtual_network" "main" {
