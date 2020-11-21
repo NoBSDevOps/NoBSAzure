@@ -15,7 +15,7 @@ resource "azurerm_availability_set" "monolith-as" {
 }
 
 resource "azurerm_network_security_group" "monolithnsg" {
-  name                = "allowssh"
+  name                = "nsg"
   location            = azurerm_resource_group.monolithRG.location
   resource_group_name = azurerm_resource_group.monolithRG.name
 
