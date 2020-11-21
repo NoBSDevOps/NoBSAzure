@@ -29,3 +29,14 @@
       name: WMSvc
       start_mode: auto
       state: started
+  
+  - name: Open up WebDeploy in the Windows firewall
+    win_firewall_rule:
+      name: WebDeploy
+      localport: 8172
+      action: allow
+      direction: in
+      protocol: tcp
+      state: present
+      remoteip: {{ manageemnt_ip }}
+      enabled: yes
