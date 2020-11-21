@@ -128,7 +128,7 @@ resource "azurerm_lb" "LB" {
  resource_group_name = azurerm_resource_group.monolithRG.name
 
  frontend_ip_configuration {
-   name                 = "publicIPAddress"
+   name                 = "lb_frontend"
    public_ip_address_id = azurerm_public_ip.lbIp.id
  }
 }
@@ -144,6 +144,16 @@ resource "azurerm_lb_probe" "lbprobe" {
   loadbalancer_id     = azurerm_lb.LB.id
   name                = "http-running-probe"
   port                = 80
+}
+
+resource "azurerm_lb_rule" "lbrule" {
+  resource_group_name            = azurerm_resource_group.monolithRG.name
+  loadbalancer_id                = azurerm_lb.LB.id
+  name                           = "LBRule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "lb_frontend"
 }
 
 resource "azurerm_windows_virtual_machine" "monolithVMs" {
