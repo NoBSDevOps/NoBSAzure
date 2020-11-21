@@ -38,5 +38,5 @@
       direction: in
       protocol: tcp
       state: present
-      remoteip: {{ manageemnt_ip }}
+      remoteip: {{ management_ip }}
       enabled: yes
