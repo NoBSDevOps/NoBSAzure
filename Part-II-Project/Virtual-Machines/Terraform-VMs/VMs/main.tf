@@ -69,6 +69,19 @@ resource "azurerm_network_security_group" "monolithnsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  
+  ## not required. Only needed if you need to RDP to the VMs to troubleshoot
+  security_rule {
+    name                       = "allowRDP"
+    priority                   = 104
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = var.management_ip
+    destination_address_prefix = "*"
+  }
 }
 
 ## Create a simple vNet
