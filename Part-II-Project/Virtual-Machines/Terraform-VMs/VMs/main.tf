@@ -201,11 +201,14 @@ resource "azurerm_windows_virtual_machine" "monolithVMs" {
 ## and execute it to open up WinRM for Ansible to connect to it from Azure Cloud Shell.
 resource "azurerm_virtual_machine_extension" "enableWinRm" {
   count                 = 2
-  name                 = "enableWinRM"
-  virtual_machine_id   = azurerm_windows_virtual_machine.monolithVMs[count.index].id
-  publisher            = "Microsoft.Azure.Extensions" ## az vm extension image list --location eastus
-  type                 = "CustomScript" ## az vm extension image list --location eastus
-  type_handler_version = "2.0" ## az vm extension image list --location eastus
+  name                  = "enableWinRM"
+  virtual_machine_id    = azurerm_windows_virtual_machine.monolithVMs[count.index].id
+  publisher             = "Microsoft.Compute"
+  type                  = "CustomScriptExtension"
+  type_handler_version  = "1.9"
+  #publisher            = "Microsoft.Azure.Extensions" ## az vm extension image list --location eastus
+  #type                 = "CustomScript" ## az vm extension image list --location eastus
+  #type_handler_version = "2.0" ## az vm extension image list --location eastus
   settings = <<SETTINGS
     {
         "fileUris": [
