@@ -80,22 +80,13 @@ resource "azurerm_public_ip" "vmIps" {
   allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 30
   domain_name_label       = "${var.domain_name_prefix}-${count.index}"
-
-  tags = {
-    environment = "test"
-  }
 }
 
 resource "azurerm_public_ip" "lbIp" {
   name                    = "publicLbIp"
   location                = azurerm_resource_group.monolithRG.location
   resource_group_name     = azurerm_resource_group.monolithRG.name
-  allocation_method       = "Dynamic"
-  idle_timeout_in_minutes = 30
-
-  tags = {
-    environment = "test"
-  }
+  allocation_method       = "Static"
 }
 
 resource "azurerm_network_interface" "main" {
@@ -185,10 +176,6 @@ resource "azurerm_windows_virtual_machine" "monolithVMs" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-  }
-
-  tags = {
-    environment = "staging"
   }
 
   depends_on = [
