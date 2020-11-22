@@ -228,7 +228,7 @@ SETTINGS
 }
 
 output "VMIps" {
-  value       = [${azurerm_public_ip.vmIps.*.ip_address}]
+  value       = azurerm_public_ip.vmIps.*.ip_address
 }
 
 ## Return the load balancer's public IP address so we know what IP we can connect to and test this.
