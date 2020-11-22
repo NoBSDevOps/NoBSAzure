@@ -112,6 +112,7 @@ resource "azurerm_network_interface" "main" {
     name                          = "ip_config"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.vmIps[count.index].id
   }
   
   ## Ensure the subnet is created first before creating these vNics.
