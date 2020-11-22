@@ -175,6 +175,7 @@ resource "azurerm_lb_rule" "lbrule" {
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.be_pool.id
   frontend_ip_configuration_name = "lb_frontend"
 }
 
