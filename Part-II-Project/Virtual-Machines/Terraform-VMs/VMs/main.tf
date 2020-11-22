@@ -88,8 +88,7 @@ resource "azurerm_public_ip" "lbIp" {
   allocation_method       = "Static"
 }
 
-## You'll temporarily need public IPs for Ansible to connect to. Once configured,
-## the web servers will be behind a load balancer and these will not be needed.
+## You'll need public IPs for each VM for Ansible to connect to and to deploy the web app to.
 resource "azurerm_public_ip" "vmIps" {
   count                   = 2
   name                    = "publicVmIp-${count.index}"
