@@ -56,6 +56,19 @@ resource "azurerm_network_security_group" "monolithnsg" {
     source_address_prefix      = var.management_ip
     destination_address_prefix = "*"
   }
+  
+  ## Create a rule to allow web clients to connect to the web app
+  security_rule {
+    name                       = "allowPublicWeb"
+    priority                   = 103
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 ## Create a simple vNet
