@@ -214,7 +214,7 @@ resource "azurerm_virtual_machine_extension" "enableWinRm" {
         "fileUris": [
           "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
         ],
-        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ./ConfigureRemotingForAnsible.ps1; exit 0"
+        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ./ConfigureRemotingForAnsible.ps1" ## exit code has to be 0
     }
   SETTINGS
 }
