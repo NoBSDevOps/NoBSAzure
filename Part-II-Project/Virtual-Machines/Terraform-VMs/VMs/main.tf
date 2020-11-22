@@ -227,6 +227,10 @@ resource "azurerm_virtual_machine_extension" "enablewinrm" {
 SETTINGS
 }
 
+output "VMIps" {
+  value       = [${azurerm_public_ip.vmIps.*.ip_address}]
+}
+
 ## Return the load balancer's public IP address so we know what IP we can connect to and test this.
 output "Load_Balancer_IP" {
   value       = azurerm_public_ip.lbIp.ip_address
