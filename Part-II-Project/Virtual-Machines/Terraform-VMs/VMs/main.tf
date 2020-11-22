@@ -210,21 +210,21 @@ resource "azurerm_windows_virtual_machine" "monolithVMs" {
 ## Install the custom script VM extension to each VM. When the VM comes up,
 ## the extension will download the ConfigureRemotingForAnsible.ps1 script from GitHub
 ## and execute it to open up WinRM for Ansible to connect to it from Azure Cloud Shell.
-resource "azurerm_virtual_machine_extension" "enableWinRm" {
+## exit code has to be 0
+resource "azurerm_virtual_machine_extension" "enablewinrm" {
   count                 = 2
-  name                  = "enableWinRM"
+  name                  = "enablewinrm"
   virtual_machine_id    = azurerm_windows_virtual_machine.monolithVMs[count.index].id
-  publisher            = "Microsoft.Azure.Extensions" ## az vm extension image list --location eastus
-  type                 = "CustomScript" ## az vm extension image list --location eastus
-  type_handler_version = "2.0" ## az vm extension image list --location eastus
+  publisher            = "Microsoft.Compute" ## az vm extension image list --location eastus Do not use Microsoft.Azure.Extensions here
+  type                 = "CustomScriptExtension" ## az vm extension image list --location eastus Only use CustomScriptExtension here
+  type_handler_version = "1.9" ## az vm extension image list --location eastus
+  auto_upgrade_minor_version = true
   settings = <<SETTINGS
     {
-        "fileUris": [
-          "https://raw.githubusercontent.com/NoBSDevOps/BookResources/master/Part-II-Project/Virtual-Machines/Ansible-Configuration/Configure-WinRM.ps1"
-        ],
-        "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ./ConfigureRemotingForAnsible.ps1" ## exit code has to be 0
+      "fileUris": ["https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"],
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File ConfigureRemotingForAnsible.ps1"
     }
-  SETTINGS
+SETTINGS
 }
 
 ## Return the load balancer's public IP address so we know what IP we can connect to and test this.
