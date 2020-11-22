@@ -88,6 +88,17 @@ resource "azurerm_public_ip" "lbIp" {
   allocation_method       = "Static"
 }
 
+## You'll temporarily need public IPs for Ansible to connect to. Once configured,
+## the web servers will be behind a load balancer and these will not be needed.
+resource "azurerm_public_ip" "vmIps" {
+  count                   = 2
+  name                    = "publicVmIp-${count.index}"
+  location                = azurerm_resource_group.monolithRG.location
+  resource_group_name     = azurerm_resource_group.monolithRG.name
+  allocation_method       = "Dynamic"
+  domain_name_label       = "${var.domain_name_prefix}-${count.index}"
+}
+
 ## Create a vNic for each VM. Using the count property to create two vNIcs while using ${count.index}
 ## to refer to each VM which will be defined in an array
 resource "azurerm_network_interface" "main" {
