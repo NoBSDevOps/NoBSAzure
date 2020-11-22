@@ -66,26 +66,6 @@ Param (
     [switch]$EnableCredSSP
 )
 
-Function Write-Log
-{
-    $Message = $args[0]
-    Write-EventLog -LogName Application -Source $EventSource -EntryType Information -EventId 1 -Message $Message
-}
-
-Function Write-VerboseLog
-{
-    $Message = $args[0]
-    Write-Verbose $Message
-    Write-Log $Message
-}
-
-Function Write-HostLog
-{
-    $Message = $args[0]
-    Write-Output $Message
-    Write-Log $Message
-}
-
 Function New-LegacySelfSignedCert
 {
     Param (
@@ -224,54 +204,18 @@ Trap
 }
 $ErrorActionPreference = "Stop"
 
-# Get the ID and security principal of the current user account
-$myWindowsID=[System.Security.Principal.WindowsIdentity]::GetCurrent()
-$myWindowsPrincipal=new-object System.Security.Principal.WindowsPrincipal($myWindowsID)
-
-# Get the security principal for the Administrator role
-$adminRole=[System.Security.Principal.WindowsBuiltInRole]::Administrator
-
-# Check to see if we are currently running "as Administrator"
-if (-Not $myWindowsPrincipal.IsInRole($adminRole))
-{
-    Write-Output "ERROR: You need elevated Administrator privileges in order to run this script."
-    Write-Output "       Start Windows PowerShell by using the Run as Administrator option."
-    Exit 2
-}
-
-$EventSource = $MyInvocation.MyCommand.Name
-If (-Not $EventSource)
-{
-    $EventSource = "Powershell CLI"
-}
-
-If ([System.Diagnostics.EventLog]::Exists('Application') -eq $False -or [System.Diagnostics.EventLog]::SourceExists($EventSource) -eq $False)
-{
-    New-EventLog -LogName Application -Source $EventSource
-}
-
-# Detect PowerShell version.
-If ($PSVersionTable.PSVersion.Major -lt 3)
-{
-    Write-Log "PowerShell version 3 or higher is required."
-    Throw "PowerShell version 3 or higher is required."
-}
-
 # Find and start the WinRM service.
 Write-Verbose "Verifying WinRM service."
 If (!(Get-Service "WinRM"))
 {
-    Write-Log "Unable to find the WinRM service."
     Throw "Unable to find the WinRM service."
 }
 ElseIf ((Get-Service "WinRM").Status -ne "Running")
 {
     Write-Verbose "Setting WinRM service to start automatically on boot."
     Set-Service -Name "WinRM" -StartupType Automatic
-    Write-Log "Set WinRM service to start automatically on boot."
     Write-Verbose "Starting WinRM service."
     Start-Service -Name "WinRM" -ErrorAction Stop
-    Write-Log "Started WinRM service."
 
 }
 
@@ -281,12 +225,10 @@ If (!(Get-PSSessionConfiguration -Verbose:$false) -or (!(Get-ChildItem WSMan:\lo
   If ($SkipNetworkProfileCheck) {
     Write-Verbose "Enabling PS Remoting without checking Network profile."
     Enable-PSRemoting -SkipNetworkProfileCheck -Force -ErrorAction Stop
-    Write-Log "Enabled PS Remoting without checking Network profile."
   }
   Else {
     Write-Verbose "Enabling PS Remoting."
     Enable-PSRemoting -Force -ErrorAction Stop
-    Write-Log "Enabled PS Remoting."
   }
 }
 Else
@@ -305,7 +247,7 @@ if ($token_value -ne 1) {
     if ($null -ne $token_value) {
         Remove-ItemProperty -Path $token_path -Name $token_prop_name
     }
-    New-ItemProperty -Path $token_path -Name $token_prop_name -Value 1 -PropertyType DWORD > $null
+    $null = New-ItemProperty -Path $token_path -Name $token_prop_name -Value 1 -PropertyType DWORD > $null
 }
 
 # Make sure there is a SSL listener.
@@ -314,7 +256,6 @@ If (!($listeners | Where-Object {$_.Keys -like "TRANSPORT=HTTPS"}))
 {
     # We cannot use New-SelfSignedCertificate on 2012R2 and earlier
     $thumbprint = New-LegacySelfSignedCert -SubjectName $SubjectName -ValidDays $CertValidityDays
-    Write-HostLog "Self-signed SSL certificate generated; thumbprint: $thumbprint"
 
     # Create the hashtables of settings to be used.
     $valueset = @{
@@ -328,8 +269,7 @@ If (!($listeners | Where-Object {$_.Keys -like "TRANSPORT=HTTPS"}))
     }
 
     Write-Verbose "Enabling SSL listener."
-    New-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset -ValueSet $valueset
-    Write-Log "Enabled SSL listener."
+    $null = New-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset -ValueSet $valueset
 }
 Else
 {
@@ -341,7 +281,6 @@ Else
 
         # We cannot use New-SelfSignedCertificate on 2012R2 and earlier
         $thumbprint = New-LegacySelfSignedCert -SubjectName $SubjectName -ValidDays $CertValidityDays
-        Write-HostLog "Self-signed SSL certificate generated; thumbprint: $thumbprint"
 
         $valueset = @{
             CertificateThumbprint = $thumbprint
@@ -353,10 +292,10 @@ Else
             Address = "*"
             Transport = "HTTPS"
         }
-        Remove-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset
+        $null = Remove-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset
 
         # Add new Listener with new SSL cert
-        New-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset -ValueSet $valueset
+        $null = New-WSManInstance -ResourceURI 'winrm/config/Listener' -SelectorSet $selectorset -ValueSet $valueset
     }
 }
 
@@ -368,8 +307,7 @@ If ($DisableBasicAuth)
     If (($basicAuthSetting.Value) -eq $true)
     {
         Write-Verbose "Disabling basic auth support."
-        Set-Item -Path "WSMan:\localhost\Service\Auth\Basic" -Value $false
-        Write-Log "Disabled basic auth support."
+        $null = Set-Item -Path "WSMan:\localhost\Service\Auth\Basic" -Value $false
     }
     Else
     {
@@ -381,8 +319,7 @@ Else
     If (($basicAuthSetting.Value) -eq $false)
     {
         Write-Verbose "Enabling basic auth support."
-        Set-Item -Path "WSMan:\localhost\Service\Auth\Basic" -Value $true
-        Write-Log "Enabled basic auth support."
+        $null = Set-Item -Path "WSMan:\localhost\Service\Auth\Basic" -Value $true
     }
     Else
     {
@@ -398,8 +335,7 @@ If ($EnableCredSSP)
     If (($credsspAuthSetting.Value) -eq $false)
     {
         Write-Verbose "Enabling CredSSP auth support."
-        Enable-WSManCredSSP -role server -Force
-        Write-Log "Enabled CredSSP auth support."
+        $null = Enable-WSManCredSSP -role server -Force
     }
 }
 
@@ -413,14 +349,12 @@ $fwtest2 = netsh advfirewall firewall show rule name="Allow WinRM HTTPS" profile
 If ($fwtest1.count -lt 5)
 {
     Write-Verbose "Adding firewall rule to allow WinRM HTTPS."
-    netsh advfirewall firewall add rule profile=any name="Allow WinRM HTTPS" dir=in localport=5986 protocol=TCP action=allow
-    Write-Log "Added firewall rule to allow WinRM HTTPS."
+    $null = netsh advfirewall firewall add rule profile=any name="Allow WinRM HTTPS" dir=in localport=5986 protocol=TCP action=allow
 }
 ElseIf (($fwtest1.count -ge 5) -and ($fwtest2.count -lt 5))
 {
     Write-Verbose "Updating firewall rule to allow WinRM HTTPS for any profile."
-    netsh advfirewall firewall set rule name="Allow WinRM HTTPS" new profile=any
-    Write-Log "Updated firewall rule to allow WinRM HTTPS for any profile."
+    $null = netsh advfirewall firewall set rule name="Allow WinRM HTTPS" new profile=any
 }
 Else
 {
@@ -447,7 +381,5 @@ ElseIf ($httpResult -and !$httpsResult)
 }
 Else
 {
-    Write-Log "Unable to establish an HTTP or HTTPS remoting session."
     Throw "Unable to establish an HTTP or HTTPS remoting session."
 }
-Write-VerboseLog "PS Remoting has been successfully configured for Ansible."
