@@ -202,10 +202,10 @@ resource "azurerm_windows_virtual_machine" "monolithVMs" {
 resource "azurerm_virtual_machine_extension" "enableWinRm" {
   count                 = 2
   name                 = "enableWinRM"
-  virtual_machine_id = azurerm_windows_virtual_machine.monolithVMs[count.index].id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
+  virtual_machine_id   = azurerm_windows_virtual_machine.monolithVMs[count.index].id
+  publisher            = "Microsoft.Azure.Extensions" ## az vm extension image list --location eastus
+  type                 = "CustomScript" ## az vm extension image list --location eastus
+  type_handler_version = "2.1.3" ## az vm extension image list --location eastus
   settings = <<SETTINGS
     {
         "fileUris": [
