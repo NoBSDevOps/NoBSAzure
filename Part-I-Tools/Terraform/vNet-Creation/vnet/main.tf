@@ -13,7 +13,7 @@ resource "azurerm_resource_group" "NoBS" {
 
 resource "azurerm_network_security_group" "NoBS-SG" {
   name                = "NoBSSG"
-  location            = "eastus"
+  location            = var.location
   resource_group_name = var.resourceGroupName
 }
 
@@ -37,7 +37,7 @@ resource "azurerm_subnet" "NoBS-sub" {
 }
 
 resource "azurerm_network_interface" "VMInterface" {
-  name                = "MVInterface"
+  name                = "VMInterface"
   location            = azurerm_network_security_group.NoBS-SG.location
   resource_group_name = azurerm_network_security_group.NoBS-SG.resource_group_name
 
