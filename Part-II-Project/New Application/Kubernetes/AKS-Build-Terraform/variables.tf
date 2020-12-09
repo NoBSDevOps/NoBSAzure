@@ -12,8 +12,3 @@ variable "location" {
     type = string
     description = "Regio"
 }
-
-variable "KVClientId" {
-    type = string
-    description = "The Azure key vault secret for client ID"
-}
