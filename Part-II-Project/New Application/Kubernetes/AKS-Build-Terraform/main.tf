@@ -12,14 +12,19 @@ provider azurerm {
   features {}
 }
 
+data "azurerm_key_vault" "kv" {
+  name                = "NOBS"
+  resource_group_name = var.resourceGroup
+}
+
 data "azurerm_key_vault_secret" "keyVaultClientID" {
   name         = "AKS_client_id"
-  key_vault_id = var.keyvaultID
+  key_vault_id = data.azurerm_key_vault.kv.id
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientSecret" {
   name         = "AKS_client_secret"
-  key_vault_id = var.keyvaultID
+  key_vault_id = data.azurerm_key_vault.kv.id
 }
 
 output "ClientID" {
