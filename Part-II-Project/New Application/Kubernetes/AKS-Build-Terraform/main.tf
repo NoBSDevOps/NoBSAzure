@@ -13,12 +13,12 @@ provider azurerm {
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientID" {
-  name         = "AKSClientID"
+  name         = "AKS_client_id"
   key_vault_id = var.keyvaultID
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientSecret" {
-  name         = "AKSClientSecret"
+  name         = "AKS_client_secret"
   key_vault_id = var.keyvaultID
 }
 
