@@ -45,8 +45,4 @@ resource "azurerm_kubernetes_cluster" "NoBSAKS" {
     client_id     = "${data.azurerm_key_vault_secret.keyVaultClientID.value}"
     client_secret = "${data.azurerm_key_vault_secret.keyVaultClientSecret.value}"
   }
-
-  tags = {
-    Environment = "Development"
-  }
 }
