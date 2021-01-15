@@ -12,14 +12,19 @@ provider azurerm {
   features {}
 }
 
+data "azurerm_key_vault" "kv" {
+  name                = "NOBS"
+  resource_group_name = var.resourceGroup
+}
+
 data "azurerm_key_vault_secret" "keyVaultClientID" {
-  name         = "AKSClientID"
-  key_vault_id = var.keyvaultID
+  name         = "AKS_client_id"
+  key_vault_id = data.azurerm_key_vault.kv.id
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientSecret" {
-  name         = "AKSClientSecret"
-  key_vault_id = var.keyvaultID
+  name         = "AKS_client_secret"
+  key_vault_id = data.azurerm_key_vault.kv.id
 }
 
 output "ClientID" {
@@ -44,9 +49,5 @@ resource "azurerm_kubernetes_cluster" "NoBSAKS" {
   service_principal {
     client_id     = "${data.azurerm_key_vault_secret.keyVaultClientID.value}"
     client_secret = "${data.azurerm_key_vault_secret.keyVaultClientSecret.value}"
-  }
-
-  tags = {
-    Environment = "Development"
   }
 }
