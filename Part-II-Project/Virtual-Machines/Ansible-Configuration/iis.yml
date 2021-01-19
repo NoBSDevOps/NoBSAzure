@@ -30,3 +30,16 @@
       name: WMSvc
       start_mode: auto
       state: started
+      
+  - name: install net core iis hosting module with no frameworks
+    win_chocolatey:
+      name: "dotnetcore-windowshosting"
+      version: "3.1.0"
+      install_args: "OPT_NO_SHARED_CONFIG_CHECK=1"
+      state: present
+      notify: restart IIS
+
+  - name: Create logging directory
+    win_file:
+      path: c:\logs
+      state: directory
