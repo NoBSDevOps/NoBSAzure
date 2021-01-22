@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: movieapp
-          image: exploredocker.azurecr.io/webapi:v1
+          image: nobsreg.azurecr.io/dotnetcore/movieapp:latest
           ports:
             - containerPort: 80
               protocol: TCP
@@ -28,14 +28,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: movieapp
-  labels:
-    app: movieapp
-    service: movieapp
+  name: movieapp-service
 spec:
+  type: LoadBalancer
   ports:
-    - port: 80
-      targetPort: 80
-      protocol: TCP
+  - port: 80
   selector:
-    service: movieapp
+    app: movieapp
