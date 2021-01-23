@@ -1,14 +1,13 @@
 terraform {
   backend "azurerm" {
     resource_group_name = "NoBS"
-    storage_account_name = "NoBSTFState"
+    storage_account_name = "nobstfstate"
     container_name = "tfstate"
     key = "terraform.state"
   }
 }
 
 provider azurerm {
-  version = "2.0.0"
   features {}
 }
 
@@ -18,21 +17,13 @@ data "azurerm_key_vault" "kv" {
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientID" {
-  name         = "AKS_client_id"
+  name         = "AKSClientId"
   key_vault_id = data.azurerm_key_vault.kv.id
 }
 
 data "azurerm_key_vault_secret" "keyVaultClientSecret" {
-  name         = "AKS_client_secret"
+  name         = "AKSClientSecret"
   key_vault_id = data.azurerm_key_vault.kv.id
-}
-
-output "ClientID" {
-  value = "${data.azurerm_key_vault_secret.keyVaultClientID.value}"
-}
-
-output "ClientSecret" {
-  value = "${data.azurerm_key_vault_secret.keyVaultClientSecret.value}"
 }
 
 resource "azurerm_kubernetes_cluster" "NoBSAKS" {
@@ -47,7 +38,7 @@ resource "azurerm_kubernetes_cluster" "NoBSAKS" {
     vm_size = "Standard_D2_v2"
   }
   service_principal {
-    client_id     = "${data.azurerm_key_vault_secret.keyVaultClientID.value}"
-    client_secret = "${data.azurerm_key_vault_secret.keyVaultClientSecret.value}"
+    client_id     = data.azurerm_key_vault_secret.keyVaultClientID.value
+    client_secret = data.azurerm_key_vault_secret.keyVaultClientSecret.value
   }
 }
