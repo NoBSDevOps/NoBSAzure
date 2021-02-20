@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: nobsdevopsbookresources 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nobsdevopsbookresources
+  template:
+    metadata:
+      labels:
+        app: nobsdevopsbookresources 
+    spec:
+      containers:
+        - name: nobsdevopsbookresources 
+          image: nobsreg92.azurecr.io/nobsdevopsbookresources
+          ports:
+          - containerPort: 80
