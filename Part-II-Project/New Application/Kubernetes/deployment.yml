@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: movieapp
-          image: nobsreg.azurecr.io/dotnetcore/movieapp:latest
+          image: nobsreg92.azurecr.io/dotnetcore/movieapp:latest
           ports:
             - containerPort: 80
               protocol: TCP
